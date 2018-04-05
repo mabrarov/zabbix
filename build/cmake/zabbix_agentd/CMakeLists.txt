@@ -15,18 +15,13 @@ set(zbx_config_include_dir "${zbx_home_dir}/build/win32/include")
 set(zbx_include_dir        "${zbx_home_dir}/include")
 set(zbx_src_dir            "${zbx_home_dir}/src")
 
-set(common_compile_definitions )
-set(common_compile_options )
-set(c_compile_definitions )
-set(c_compile_options )
-set(cpp_compile_definitions )
-set(cpp_compile_options )
-set(c_sources )
-set(cpp_sources )
+set(cxx_compile_definitions )
+set(cxx_compile_options )
+set(cxx_sources )
 set(link_options )
 set(libraries )
 
-list(APPEND common_compile_definitions
+list(APPEND cxx_compile_definitions
     WITH_AGENT_METRICS
     WITH_COMMON_METRICS
     WITH_SPECIFIC_METRICS
@@ -43,32 +38,12 @@ list(APPEND common_compile_definitions
     _VC80_UPGRADE=0x0600
     HAVE_IPV6)
 
-list(APPEND common_compile_options
-    "/Zi"
-    "/nologo"
-    "/O2"
-    "/Ob1"
+list(APPEND cxx_compile_options
     "/GF"
     "/FD"
     "/EHsc"
-    "/MT"
     "/Gy"
-    "/W3"
     "/c")
-
-list(APPEND c_compile_definitions
-    ${common_compile_definitions})
-
-list(APPEND c_compile_options
-    ${common_compile_options}
-    "/TC")
-
-list(APPEND cpp_compile_definitions
-    ${common_compile_definitions})
-
-list(APPEND cpp_compile_options
-    ${common_compile_options}
-    "/TP")
 
 set(manifest_file "/MANIFESTFILE:\"${PROJECT_NAME}.exe.manifest\"")
 
@@ -76,12 +51,8 @@ list(APPEND link_options
     "/DEBUG"
     "/OPT:REF"
     "/DELAYLOAD:wevtapi.dll"
-    "/NOLOGO"
     "/INCREMENTAL:NO"
-    "/MANIFEST"
     ${manifest_file}
-    "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\""
-    "/SUBSYSTEM:CONSOLE "
     "/DYNAMICBASE:NO")
 
 set(libraries
@@ -95,7 +66,7 @@ set(libraries
     "delayimp"
     "wevtapi")
 
-list(APPEND c_sources
+list(APPEND cxx_sources
     "${zbx_src_dir}/libs/zbxalgo/algodefs.c"
     "${zbx_src_dir}/libs/zbxalgo/vector.c"
     "${zbx_src_dir}/libs/zbxcommon/alias.c"
@@ -139,6 +110,7 @@ list(APPEND c_sources
     "${zbx_src_dir}/libs/zbxsysinfo/win32/swap.c"
     "${zbx_src_dir}/libs/zbxsysinfo/win32/uptime.c"
     "${zbx_src_dir}/libs/zbxsysinfo/win32/win32.c"
+    "${zbx_src_dir}/libs/zbxsysinfo/win32/wmi.cpp"
     "${zbx_src_dir}/libs/zbxsysinfo/sysinfo.c"
     "${zbx_src_dir}/libs/zbxsysinfo/win32/software.c"
     "${zbx_src_dir}/libs/zbxsysinfo/win32/system.c"
@@ -159,28 +131,16 @@ list(APPEND c_sources
     "${zbx_src_dir}/libs/zbxwin32/fatal.c"
     "${zbx_src_dir}/libs/zbxwin32/disk.c")
 
-list(APPEND cpp_sources
-    "${zbx_src_dir}/libs/zbxsysinfo/win32/wmi.cpp")
-
-set(c_and_cpp_sources ${c_sources} ${cpp_sources})
-
-set_source_files_properties(${c_sources} PROPERTIES COMPILE_DEFINITIONS "${c_compile_definitions}")
-set_source_files_properties(${c_sources} PROPERTIES COMPILE_FLAGS "${c_compile_options}")
-
-set_source_files_properties(${cpp_sources} PROPERTIES COMPILE_DEFINITIONS "${cpp_compile_definitions}")
-set_source_files_properties(${cpp_sources} PROPERTIES COMPILE_FLAGS "${cpp_compile_options}")
-
 zbx_list_to_comma_separated_string(${link_options} link_options_str)
 
 add_executable(${PROJECT_NAME}
-    ${c_sources}
-    ${cpp_sources})
+    ${cxx_sources})
 target_compile_options(${PROJECT_NAME}
     PRIVATE
-    ${common_compile_options})
+    ${cxx_compile_options})
 target_compile_definitions(${PROJECT_NAME}
     PRIVATE
-    ${common_compile_definitions})
+    ${cxx_compile_definitions})
 target_include_directories(${PROJECT_NAME}
     PUBLIC
     ${zbx_project_dir}
@@ -194,5 +154,5 @@ target_link_libraries(${PROJECT_NAME}
 
 if(NOT zbx_no_cmake_dir_source_group)
     # Group files according to file path
-    zbx_dir_source_group("Source Files" "${zbx_src_dir}" "${c_and_cpp_sources}")
+    zbx_dir_source_group("Source Files" "${zbx_src_dir}" "${cxx_sources}")
 endif()
