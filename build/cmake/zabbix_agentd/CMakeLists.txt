@@ -162,11 +162,15 @@ list(APPEND c_sources
 list(APPEND cpp_sources
     "${zbx_src_dir}/libs/zbxsysinfo/win32/wmi.cpp")
 
-set_source_files_properties({c_sources} PROPERTIES COMPILE_DEFINITIONS ${c_compile_definitions})
-set_source_files_properties({c_sources} PROPERTIES COMPILE_FLAGS ${c_compile_options})
+set(c_and_cpp_sources ${c_sources} ${cpp_sources})
 
-set_source_files_properties({cpp_sources} PROPERTIES COMPILE_DEFINITIONS ${cpp_compile_definitions})
-set_source_files_properties({cpp_sources} PROPERTIES COMPILE_FLAGS ${cpp_compile_options})
+set_source_files_properties(${c_sources} PROPERTIES COMPILE_DEFINITIONS "${c_compile_definitions}")
+set_source_files_properties(${c_sources} PROPERTIES COMPILE_FLAGS "${c_compile_options}")
+
+set_source_files_properties(${cpp_sources} PROPERTIES COMPILE_DEFINITIONS "${cpp_compile_definitions}")
+set_source_files_properties(${cpp_sources} PROPERTIES COMPILE_FLAGS "${cpp_compile_options}")
+
+zbx_list_to_comma_separated_string(${link_options} link_options_str)
 
 add_executable(${PROJECT_NAME}
     ${c_sources}
@@ -185,12 +189,10 @@ target_include_directories(${PROJECT_NAME}
     ${zbx_include_dir})
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
-    ${link_options}
+    "${link_options_str}"
     ${libraries})
-
-zbx_set_target_zbx_output_dir(${PROJECT_NAME} ${zbx_output_dir})
 
 if(NOT zbx_no_cmake_dir_source_group)
     # Group files according to file path
-    zbx_dir_source_group("Source Files" "${zbx_src_dir}" "${c_sources}")
+    zbx_dir_source_group("Source Files" "${zbx_src_dir}" "${c_and_cpp_sources}")
 endif()
