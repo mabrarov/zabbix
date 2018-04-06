@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(zabbix_agentd)
 
+find_package(MessageCompiler REQUIRED)
 find_package(PCRE REQUIRED COMPONENTS pcre pcreposix)
 find_package(OpenSSL)
-
-# TODO: implement search for Message Compiler
-set(CMAKE_MC_COMPILER "mc.exe")
 
 set(zbx_home_dir "${PROJECT_SOURCE_DIR}/../../..")
 
@@ -26,9 +24,9 @@ set(win32_message_compiler_output_dir "${CMAKE_CURRENT_BINARY_DIR}")
 set(cxx_compile_definitions )
 set(cxx_compile_options )
 set(cxx_sources )
-set(win32_message_source )
-set(win32_resource_headers )
-set(win32_resources )
+set(message_source )
+set(resource_headers )
+set(resource_sources )
 set(link_options )
 set(libraries )
 
@@ -164,39 +162,39 @@ if(OPENSSL_FOUND)
         "${zbx_src_dir}/libs/zbxcrypto/tls.c")
 endif()
 
-set(win32_message_source "${zbx_makefile_dir}/messages.mc")
+set(message_source "${zbx_makefile_dir}/messages.mc")
 
 # These 2 files are genereated by Message Compiler
-set(win32_message_header "${win32_message_compiler_output_dir}/messages.h")
-set(win32_message_bin "${win32_message_compiler_output_dir}/Msg00001.bin")
+set(message_header "${win32_message_compiler_output_dir}/messages.h")
+set(message_binary "${win32_message_compiler_output_dir}/Msg00001.bin")
 # Command to generate
-add_custom_command(OUTPUT "${win32_message_header}" "${win32_message_bin}"
-    COMMAND "${CMAKE_MC_COMPILER}" -U -h "${win32_message_compiler_output_dir}" -r "${win32_message_compiler_output_dir}" "${win32_message_source}"
-    DEPENDS "${win32_message_source}"
+add_custom_command(OUTPUT "${message_header}" "${message_binary}"
+    COMMAND "${CMAKE_MC_COMPILER}" -U -h "${win32_message_compiler_output_dir}" -r "${win32_message_compiler_output_dir}" "${message_source}"
+    DEPENDS "${message_source}"
     VERBATIM)
 
-list(APPEND win32_resource_headers
+list(APPEND resource_headers
     "${zbx_makefile_dir}/resource.h"
     "${zbx_makefile_dir}/zabbix_agent_desc.h")
 
-list(APPEND win32_resources
+list(APPEND resource_sources
     "${zbx_makefile_dir}/resource.rc")
 
 zbx_list_to_comma_separated_string(${link_options} link_options_str)
 
-set(win32_resources_and_headers
-    ${win32_resource_headers}
-    ${win32_resources}
-    "${win32_message_source}"
-    "${win32_message_header}"
-    "${win32_message_bin}")
+set(resource_files
+    ${resource_headers}
+    ${resource_sources}
+    "${message_source}"
+    "${message_header}"
+    "${message_binary}")
 
 add_executable(${PROJECT_NAME}
     ${cxx_sources}
-    "${win32_message_header}"
-    "${win32_message_bin}"
-    ${win32_resource_headers}
-    ${win32_resources})
+    "${message_header}"
+    "${message_binary}"
+    ${resource_headers}
+    ${resource_sources})
 target_compile_options(${PROJECT_NAME}
     PRIVATE
     ${cxx_compile_options})
@@ -218,5 +216,5 @@ target_link_libraries(${PROJECT_NAME}
 if(NOT zbx_no_cmake_dir_source_group)
     # Group files according to file path
     zbx_dir_source_group("Source Files" "${zbx_src_dir}" "${cxx_sources}")
-    zbx_dir_source_group("Resource Files" "${zbx_home_dir}" "${win32_resources_and_headers}")
+    zbx_dir_source_group("Resource Files" "${zbx_home_dir}" "${resource_files}")
 endif()
