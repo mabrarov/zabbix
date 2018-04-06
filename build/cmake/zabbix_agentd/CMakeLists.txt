@@ -19,7 +19,7 @@ set(zbx_config_include_dir "${zbx_home_dir}/build/win32/include")
 set(zbx_include_dir        "${zbx_home_dir}/include")
 set(zbx_src_dir            "${zbx_home_dir}/src")
 
-set(win32_message_compiler_output_dir "${CMAKE_CURRENT_BINARY_DIR}")
+set(message_compiler_output_dir "${CMAKE_CURRENT_BINARY_DIR}")
 
 set(cxx_compile_definitions )
 set(cxx_compile_options )
@@ -165,11 +165,12 @@ endif()
 set(message_source "${zbx_makefile_dir}/messages.mc")
 
 # These 2 files are genereated by Message Compiler
-set(message_header "${win32_message_compiler_output_dir}/messages.h")
-set(message_binary "${win32_message_compiler_output_dir}/Msg00001.bin")
+set(message_header "${message_compiler_output_dir}/messages.h")
+set(message_binary "${message_compiler_output_dir}/Msg00001.bin")
 # Command to generate
 add_custom_command(OUTPUT "${message_header}" "${message_binary}"
-    COMMAND "${CMAKE_MC_COMPILER}" -U -h "${win32_message_compiler_output_dir}" -r "${win32_message_compiler_output_dir}" "${message_source}"
+    COMMAND "${CMAKE_MC_COMPILER}"
+    ARGS -U -h "${message_compiler_output_dir}" -r "${message_compiler_output_dir}" "${message_source}"
     DEPENDS "${message_source}"
     VERBATIM)
 
@@ -204,7 +205,7 @@ target_compile_definitions(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
     PUBLIC
     ${zbx_project_dir}
-    ${win32_message_compiler_output_dir}
+    ${message_compiler_output_dir}
     ${zbx_makefile_dir}
     ${zbx_config_include_dir}
     ${zbx_include_dir})
