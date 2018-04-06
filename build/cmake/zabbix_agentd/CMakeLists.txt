@@ -172,7 +172,7 @@ set(win32_message_bin "${win32_message_compiler_output_dir}/Msg00001.bin")
 # Command to generate
 add_custom_command(OUTPUT "${win32_message_header}" "${win32_message_bin}"
     COMMAND "${CMAKE_MC_COMPILER}" -U -h "${win32_message_compiler_output_dir}" -r "${win32_message_compiler_output_dir}" "${win32_message_source}"
-    DEPENDS "${zbx_project_dir}/messages.mc"
+    DEPENDS "${win32_message_source}"
     VERBATIM)
 
 list(APPEND win32_resource_headers
