@@ -114,7 +114,7 @@ function(zbx_set_target_output_dir target_name output_dir)
             ARCHIVE_OUTPUT_DIRECTORY_${configuration_type_upper_case} "${output_dir}"
             LIBRARY_OUTPUT_DIRECTORY_${configuration_type_upper_case} "${output_dir}"
             RUNTIME_OUTPUT_DIRECTORY_${configuration_type_upper_case} "${output_dir}")
-    endforeach(_configuration_type)
+    endforeach()
 endfunction()
 
 function(zbx_list_to_comma_separated_string list result)

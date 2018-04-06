@@ -60,14 +60,11 @@ list(APPEND cxx_compile_options
     "/Gy"
     "/c")
 
-set(manifest_file "/MANIFESTFILE:\"${PROJECT_NAME}.exe.manifest\"")
-
 list(APPEND link_options
     "/DEBUG"
     "/OPT:REF"
     "/DELAYLOAD:wevtapi.dll"
     "/INCREMENTAL:NO"
-    ${manifest_file}
     "/DYNAMICBASE:NO")
 
 list(APPEND libraries
@@ -213,6 +210,10 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE
     "${link_options_str}"
     ${libraries})
+
+# Do not put results of build to the same place as makefiles do
+# because "CMake style" prefers out-of-source tree builds.
+#zbx_set_target_output_dir(${PROJECT_NAME} "${zbx_output_dir}")
 
 if(NOT zbx_no_cmake_dir_source_group)
     # Group files according to file path
