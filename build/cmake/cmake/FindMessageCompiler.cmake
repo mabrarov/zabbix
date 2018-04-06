@@ -12,7 +12,7 @@ endif()
 find_program(CMAKE_MC_COMPILER "mc"
     HINTS ${win_sdk_dir}
     PATH_SUFFIXES ${win_sdk_binary_suffixes}
-    DOC "path to message compiler")
+    DOC "path to Microsoft Message Compiler")
 
 mark_as_advanced(CMAKE_MC_COMPILER)
 
@@ -20,11 +20,11 @@ include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(MessageCompiler
     FOUND_VAR MessageCompiler_FOUND
     REQUIRED_VARS CMAKE_MC_COMPILER
-    FAIL_MESSAGE "Failed to find message compiler")
+    FAIL_MESSAGE "Failed to find Microsoft Message Compiler")
 
 if(MessageCompiler_DEBUG)
     message(STATUS "--------FindMessageCompiler.cmake results debug--------")
-    message(STATUS "Message compiler found: ${MessageCompiler_FOUND}")
-    message(STATUS "Message compiler: ${CMAKE_MC_COMPILER}")
+    message(STATUS "Microsoft Message Compiler found: ${MessageCompiler_FOUND}")
+    message(STATUS "Microsoft Message Compiler: ${CMAKE_MC_COMPILER}")
     message(STATUS "----------------")
 endif()

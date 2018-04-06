@@ -38,4 +38,7 @@ foreach(configuration_type IN LISTS configuration_types)
     zbx_change_default_link_options("${${configuration_cxx_flags}}" ${configuration_cxx_flags})
 endforeach(configuration_type)
 
+find_package(MessageCompiler REQUIRED)
+find_package(ManifestTool REQUIRED)
+
 add_subdirectory(zabbix_agentd)

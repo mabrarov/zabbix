@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(zabbix_agentd)
 
-find_package(MessageCompiler REQUIRED)
 find_package(PCRE REQUIRED COMPONENTS pcre pcreposix)
 find_package(OpenSSL)
 
