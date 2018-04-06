@@ -55,17 +55,10 @@ endif()
 
 list(APPEND cxx_compile_options
     "/GF"
-    "/FD"
-    "/EHsc"
-    "/Gy"
-    "/c")
+    "/Gy")
 
 list(APPEND link_options
-    "/DEBUG"
-    "/OPT:REF"
-    "/DELAYLOAD:wevtapi.dll"
-    "/INCREMENTAL:NO"
-    "/DYNAMICBASE:NO")
+    "/DELAYLOAD:wevtapi.dll")
 
 list(APPEND libraries
     PCRE::pcre

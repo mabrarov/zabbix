@@ -1,5 +1,45 @@
 cmake_minimum_required(VERSION 3.0)
 
+# Changes existing (default) compiler options.
+# Parameters:
+#   result - name of list to store compile options.
+function(zbx_change_default_compile_options orignal_compile_options result)
+    set(compile_options ${orignal_compile_options})
+    # Turn on more strict warning mode
+    if(MSVC)
+        if(compile_options MATCHES "/W[0-4]")
+            string(REGEX REPLACE "/W[0-4]" "/W3" compile_options "${compile_options}")
+        else()
+            set(compile_options "${compile_options} /W3")
+        endif()
+    endif()
+    set(${result} "${compile_options}" PARENT_SCOPE)
+endfunction()
+
+# Changes existing (default) linker options.
+# Parameters:
+#   result - name of list to store link options.
+function(zbx_change_default_link_options orignal_link_options result)
+    set(link_options ${orignal_link_options})
+    if(MSVC)
+        if(link_options MATCHES "/INCREMENTAL:NO")
+            # Nothing to change here
+        elseif(link_options MATCHES "/INCREMENTAL")
+            string(REGEX REPLACE "/INCREMENTAL" "/INCREMENTAL:NO" link_options "${link_options}")
+        else()
+            set(link_options "${link_options} /INCREMENTAL:NO")
+        endif()
+        if(link_options MATCHES "/DYNAMICBASE:NO")
+            # Nothing to change here
+        elseif(link_options MATCHES "/DYNAMICBASE")
+            string(REGEX REPLACE "/DYNAMICBASE" "/DYNAMICBASE:NO" link_options "${link_options}")
+        else()
+            set(link_options "${link_options} /DYNAMICBASE:NO")
+        endif()
+    endif()
+    set(${result} "${link_options}" PARENT_SCOPE)
+endfunction()
+
 # Builds list of sub-directories (relative paths).
 # Parameters:
 #   files    - files or directories to scan (list).
