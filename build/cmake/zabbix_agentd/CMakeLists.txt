@@ -33,6 +33,7 @@ set(link_options )
 set(libraries )
 
 list(APPEND cxx_compile_definitions
+    ZABBIX_AGENT
     WITH_AGENT_METRICS
     WITH_COMMON_METRICS
     WITH_SPECIFIC_METRICS
@@ -88,6 +89,9 @@ if(OPENSSL_FOUND)
     list(APPEND libraries
         OpenSSL::SSL
         OpenSSL::Crypto)
+    if(OPENSSL_USE_STATIC_LIBS)
+        list(APPEND libraries crypt32)
+    endif()
 endif()
 
 list(APPEND cxx_sources
@@ -162,33 +166,37 @@ endif()
 
 set(win32_message_source "${zbx_makefile_dir}/messages.mc")
 
-# Gnereated by Message Compiler
+# These 2 files are genereated by Message Compiler
 set(win32_message_header "${win32_message_compiler_output_dir}/messages.h")
-set(win32_message_resource "${win32_message_compiler_output_dir}/messages.rc")
+set(win32_message_bin "${win32_message_compiler_output_dir}/Msg00001.bin")
 # Command to generate
-add_custom_command(OUTPUT "${win32_message_header}" "${win32_message_resource}"
+add_custom_command(OUTPUT "${win32_message_header}" "${win32_message_bin}"
     COMMAND "${CMAKE_MC_COMPILER}" -U -h "${win32_message_compiler_output_dir}" -r "${win32_message_compiler_output_dir}" "${win32_message_source}"
     DEPENDS "${zbx_project_dir}/messages.mc"
     VERBATIM)
 
 list(APPEND win32_resource_headers
     "${zbx_makefile_dir}/resource.h"
-    "${zbx_makefile_dir}/zabbix_agent_desc.h"
-    "${win32_message_header}")
+    "${zbx_makefile_dir}/zabbix_agent_desc.h")
 
 list(APPEND win32_resources
-    "${zbx_makefile_dir}/resource.rc"
-    "${win32_message_resource}")
+    "${zbx_makefile_dir}/resource.rc")
 
 zbx_list_to_comma_separated_string(${link_options} link_options_str)
 
-set(win32_resources_and_headers ${win32_resource_headers} ${win32_resources})
-
-add_executable(${PROJECT_NAME}
-    ${win32_message_header}
+set(win32_resources_and_headers
     ${win32_resource_headers}
     ${win32_resources}
-    ${cxx_sources})
+    "${win32_message_source}"
+    "${win32_message_header}"
+    "${win32_message_bin}")
+
+add_executable(${PROJECT_NAME}
+    ${cxx_sources}
+    "${win32_message_header}"
+    "${win32_message_bin}"
+    ${win32_resource_headers}
+    ${win32_resources})
 target_compile_options(${PROJECT_NAME}
     PRIVATE
     ${cxx_compile_options})
