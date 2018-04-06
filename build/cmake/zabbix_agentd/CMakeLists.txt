@@ -5,19 +5,8 @@ find_package(MessageCompiler REQUIRED)
 find_package(PCRE REQUIRED COMPONENTS pcre pcreposix)
 find_package(OpenSSL)
 
-set(zbx_home_dir "${PROJECT_SOURCE_DIR}/../../..")
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(zbx_output_dir "${zbx_home_dir}/bin/win64")
-else()
-    set(zbx_output_dir "${zbx_home_dir}/bin/win32")
-endif()
-
-set(zbx_project_dir        "${zbx_home_dir}/src/zabbix_agent")
-set(zbx_makefile_dir       "${zbx_home_dir}/build/win32/project")
-set(zbx_config_include_dir "${zbx_home_dir}/build/win32/include")
-set(zbx_include_dir        "${zbx_home_dir}/include")
-set(zbx_src_dir            "${zbx_home_dir}/src")
+set(target_name "${PROJECT_NAME}")
+set(generate_messages_target_name "${target_name}_generate_messages")
 
 set(message_compiler_output_dir "${CMAKE_CURRENT_BINARY_DIR}")
 
@@ -163,6 +152,8 @@ add_custom_command(OUTPUT "${message_header}" "${message_binary}"
     ARGS -U -h "${message_compiler_output_dir}" -r "${message_compiler_output_dir}" "${message_source}"
     DEPENDS "${message_source}"
     VERBATIM)
+add_custom_target(${generate_messages_target_name}
+    DEPENDS "${message_header}" "${message_binary}")
 
 list(APPEND resource_headers
     "${zbx_makefile_dir}/resource.h"
@@ -176,33 +167,31 @@ zbx_list_to_comma_separated_string(${link_options} link_options_str)
 set(resource_files
     ${resource_headers}
     ${resource_sources}
-    "${message_source}"
-    "${message_header}"
-    "${message_binary}")
+    "${message_source}")
 
-add_executable(${PROJECT_NAME}
+add_executable(${target_name}
     ${cxx_sources}
-    "${message_header}"
-    "${message_binary}"
     ${resource_headers}
     ${resource_sources})
-target_compile_options(${PROJECT_NAME}
+target_compile_options(${target_name}
     PRIVATE
     ${cxx_compile_options})
-target_compile_definitions(${PROJECT_NAME}
+target_compile_definitions(${target_name}
     PRIVATE
     ${cxx_compile_definitions})
-target_include_directories(${PROJECT_NAME}
+target_include_directories(${target_name}
     PUBLIC
     ${zbx_project_dir}
     ${message_compiler_output_dir}
     ${zbx_makefile_dir}
     ${zbx_config_include_dir}
     ${zbx_include_dir})
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${target_name}
     PRIVATE
     "${link_options_str}"
     ${libraries})
+
+add_dependencies(${target_name} ${generate_messages_target_name})
 
 # Do not put results of build to the same place as makefiles do
 # because "CMake style" prefers out-of-source tree builds.
