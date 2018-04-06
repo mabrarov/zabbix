@@ -1,12 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(zabbix)
 
-include(cmake_modules/utils.cmake)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(zbx_platform 64)
-else()
-    set(zbx_platform 32)
-endif()
+include(cmake/utils.cmake)
 
 add_subdirectory(zabbix_agentd)

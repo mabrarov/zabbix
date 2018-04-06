@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 project(zabbix_agentd)
 
+find_package(PCRE REQUIRED COMPONENTS pcre pcreposix)
+
 set(zbx_home_dir "${PROJECT_SOURCE_DIR}/../../..")
 
-if(zbx_platform EQUAL 64)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(zbx_output_dir "${zbx_home_dir}/bin/win64")
 else()
     set(zbx_output_dir "${zbx_home_dir}/bin/win32")
@@ -56,6 +58,8 @@ list(APPEND link_options
     "/DYNAMICBASE:NO")
 
 set(libraries
+    PCRE::pcre
+    PCRE::pcreposix
     "ws2_32"
     "psapi"
     "pdh"
