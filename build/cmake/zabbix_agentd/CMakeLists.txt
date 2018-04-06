@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(zabbix_agentd)
 
 find_package(PCRE REQUIRED COMPONENTS pcre pcreposix)
+find_package(OpenSSL)
 
 set(zbx_home_dir "${PROJECT_SOURCE_DIR}/../../..")
 
@@ -40,6 +41,11 @@ list(APPEND cxx_compile_definitions
     _VC80_UPGRADE=0x0600
     HAVE_IPV6)
 
+if(OPENSSL_FOUND)
+    list(APPEND cxx_compile_definitions
+        HAVE_OPENSSL)
+endif()
+
 list(APPEND cxx_compile_options
     "/GF"
     "/FD"
@@ -57,7 +63,7 @@ list(APPEND link_options
     ${manifest_file}
     "/DYNAMICBASE:NO")
 
-set(libraries
+list(APPEND libraries
     PCRE::pcre
     PCRE::pcreposix
     "ws2_32"
@@ -69,6 +75,12 @@ set(libraries
     "Iphlpapi"
     "delayimp"
     "wevtapi")
+
+if(OPENSSL_FOUND)
+    list(APPEND libraries
+        OpenSSL::SSL
+        OpenSSL::Crypto)
+endif()
 
 list(APPEND cxx_sources
     "${zbx_src_dir}/libs/zbxalgo/algodefs.c"
@@ -134,6 +146,11 @@ list(APPEND cxx_sources
     "${zbx_src_dir}/libs/zbxregexp/zbxregexp.c"
     "${zbx_src_dir}/libs/zbxwin32/fatal.c"
     "${zbx_src_dir}/libs/zbxwin32/disk.c")
+
+if(OPENSSL_FOUND)
+    list(APPEND cxx_sources
+        "${zbx_src_dir}/libs/zbxcrypto/tls.c")
+endif()
 
 zbx_list_to_comma_separated_string(${link_options} link_options_str)
 
