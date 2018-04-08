@@ -40,6 +40,21 @@ function(zbx_change_default_link_options orignal_link_options result)
     set(${result} "${link_options}" PARENT_SCOPE)
 endfunction()
 
+# Changes existing (default) resource compiler options.
+# Parameters:
+#   result - name of list to store resource compiler options.
+function(zbx_change_default_rc_options orignal_rc_options result)
+    set(rc_options ${orignal_rc_options})
+    if(rc_options MATCHES "/l 0x419")
+        # Nothing to change here
+    elseif(link_options MATCHES "/l[\t ]+(0x)*[0-9]+")
+        string(REGEX REPLACE "/l[\t ]+(0x)*[0-9]+" "/l 0x419" rc_options "${rc_options}")
+    else()
+        set(rc_options "${rc_options} /l 0x419")
+    endif()
+    set(${result} "${rc_options}" PARENT_SCOPE)
+endfunction()
+
 # Builds list of sub-directories (relative paths).
 # Parameters:
 #   files    - files or directories to scan (list).
