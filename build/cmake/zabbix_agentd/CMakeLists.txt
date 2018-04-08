@@ -43,12 +43,17 @@ endif()
 
 if(MSVC)
     list(APPEND cxx_compile_options
+        "/Zi"
         "/GF"
         "/Gy")
 endif()
 
-list(APPEND link_options
-    "/DELAYLOAD:wevtapi.dll")
+if(MSVC)
+    list(APPEND link_options
+        "/DEBUG"
+        "/DELAYLOAD:wevtapi.dll"
+        "/OPT:REF")
+endif()
 
 list(APPEND libraries
     PCRE::pcre
@@ -163,8 +168,6 @@ list(APPEND resource_headers
 list(APPEND resource_sources
     "${zbx_makefile_dir}/resource.rc")
 
-zbx_list_to_comma_separated_string(${link_options} link_options_str)
-
 set(resource_files
     ${resource_headers}
     ${resource_sources}
@@ -187,10 +190,24 @@ target_include_directories(${target_name}
     ${zbx_makefile_dir}
     ${zbx_config_include_dir}
     ${zbx_include_dir})
+
+set(link_option_str "")
+if(NOT MSVC)
+    # This should work for most of CMake generators except Visual Studio
+    zbx_list_to_string("${link_options}" "," link_option_str)
+endif()
+
 target_link_libraries(${target_name}
     PRIVATE
-    "${link_options_str}"
+    "${link_option_str}"
     ${libraries})
+
+if(MSVC)
+    foreach(link_option IN LISTS link_options)
+        # This the only way I found to pass linker options using Visual Studio CMake generator
+        set_property(TARGET ${target_name} APPEND_STRING PROPERTY LINK_FLAGS " ${link_option}")
+    endforeach()
+endif()
 
 add_dependencies(${target_name} ${generate_messages_target_name})
 
