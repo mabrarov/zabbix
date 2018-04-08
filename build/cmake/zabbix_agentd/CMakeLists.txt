@@ -41,9 +41,11 @@ if(OPENSSL_FOUND)
         HAVE_OPENSSL)
 endif()
 
-list(APPEND cxx_compile_options
-    "/GF"
-    "/Gy")
+if(MSVC)
+    list(APPEND cxx_compile_options
+        "/GF"
+        "/Gy")
+endif()
 
 list(APPEND link_options
     "/DELAYLOAD:wevtapi.dll")
