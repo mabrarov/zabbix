@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 # Changes existing (default) compiler options.
 # Parameters:
 #   result - name of list to store compile options.
-function(zbx_change_default_compile_options orignal_compile_options configuration_type result)
+function(zbx_change_compile_options orignal_compile_options configuration_type result)
     set(compile_options ${orignal_compile_options})
     string(TOUPPER "${configuration_type}" configuration_type_upper_case)
     # Turn on more strict warning mode
@@ -34,7 +34,7 @@ endfunction()
 # Changes existing (default) linker options.
 # Parameters:
 #   result - name of list to store link options.
-function(zbx_change_default_link_options orignal_link_options result)
+function(zbx_change_link_options orignal_link_options result)
     set(link_options ${orignal_link_options})
     if(MSVC)
         if(link_options MATCHES "/INCREMENTAL:NO")
@@ -58,7 +58,7 @@ endfunction()
 # Changes existing (default) resource compiler options.
 # Parameters:
 #   result - name of list to store resource compiler options.
-function(zbx_change_default_rc_options orignal_rc_options result)
+function(zbx_change_rc_options orignal_rc_options result)
     set(rc_options ${orignal_rc_options})
     if(rc_options MATCHES "/l 0x419")
         # Nothing to change here
