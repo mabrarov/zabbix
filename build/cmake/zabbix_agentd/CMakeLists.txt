@@ -201,7 +201,7 @@ add_dependencies(${target_name} ${generate_messages_target_name})
 
 # Do not put results of build to the same place as makefiles do
 # because "CMake style" prefers out-of-source tree builds.
-#zbx_set_target_output_dir(${PROJECT_NAME} "${zbx_output_dir}")
+#zbx_set_target_output_dir(${target_name} "${zbx_output_dir}")
 
 if(NOT zbx_no_cmake_dir_source_group)
     # Group files according to file path
