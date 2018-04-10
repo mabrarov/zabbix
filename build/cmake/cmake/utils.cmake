@@ -21,6 +21,7 @@ function(zbx_change_default_compile_options orignal_compile_options configuratio
                 set(compile_options "${compile_options} /Ob1")
             endif()
         endif()
+        set(compile_options "${compile_options} /FD /GF /Gy")
     endif()
     set(${result} "${compile_options}" PARENT_SCOPE)
 endfunction()

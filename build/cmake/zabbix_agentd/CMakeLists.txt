@@ -43,9 +43,7 @@ endif()
 
 if(MSVC)
     list(APPEND cxx_compile_options
-        "/Zi"
-        "/GF"
-        "/Gy")
+        "/Zi")
 endif()
 
 if(MSVC)
