@@ -19,7 +19,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([Zabbix],[3.4.7])
+AC_INIT([Zabbix],[3.4.8])
 AC_CONFIG_SRCDIR(src/zabbix_server/server.c)
 AM_INIT_AUTOMAKE([subdir-objects])
 
@@ -1416,6 +1416,8 @@ if test "x$server" = "xyes" || test "x$proxy" = "xyes"; then
 	AC_SUBST(OPENIPMI_CFLAGS)
 fi
 
+AM_CONDITIONAL(HAVE_IPMI, [test "x$have_ipmi" = "xyes"])
+
 dnl Check if Zabbix internal IPC services are used
 have_ipcservice="no"
 if test "x$have_ipmi" = "xyes"; then
@@ -1445,20 +1447,6 @@ if test "x$have_ipcservice" = "xyes"; then
 		PROXY_LIBS="$PROXY_LIBS $LIBEVENT_LIBS"
 	fi
 fi
-
-if test "x$server" = "xyes" || test "x$proxy" = "xyes" || test "x$agent" = "xyes"; then
-	dnl Check for libpcre, used by Zabbix for regular expressions
-	LIBPCRE_CHECK_CONFIG([no])
-	if test "x$found_libpcre" != "xyes"; then
-		AC_MSG_ERROR([Unable to use libpcre (libpcre check failed)])
-	fi
-fi
-
-CFLAGS="$CFLAGS $LIBPCRE_CFLAGS"
-LDFLAGS="$LDFLAGS $LIBPCRE_LDFLAGS"
-LIBS="$LIBS $LIBPCRE_LIBS"
-
-AC_SUBST(LIBPCRE_CFLAGS)
 
 dnl Check for mbed TLS (PolarSSL) libpolarssl [by default - skip]
 LIBMBEDTLS_CHECK_CONFIG([no])
@@ -1596,6 +1584,24 @@ LDFLAGS="$LDFLAGS $ICONV_LDFLAGS"
 LIBS="$LIBS $ICONV_LIBS"
 
 AC_SUBST(ICONV_CFLAGS)
+
+dnl Check for libpcre, used by Zabbix for regular expressions
+if test "x$server" = "xyes" || test "x$proxy" = "xyes" || test "x$agent" = "xyes"; then
+	LIBPCRE_CHECK_CONFIG([no])
+	if test "x$found_libpcre" != "xyes"; then
+		AC_MSG_ERROR([Unable to use libpcre (libpcre check failed)])
+	fi
+fi
+
+CFLAGS="$CFLAGS $LIBPCRE_CFLAGS"
+LDFLAGS="$LDFLAGS $LIBPCRE_LDFLAGS"
+if test "x$ARCH" = "xosx"; then
+	LIBS="$LIBPCRE_LIBS $LIBS"
+else
+	LIBS="$LIBS $LIBPCRE_LIBS"
+fi
+
+AC_SUBST(LIBPCRE_CFLAGS)
 
 RANLIB="ranlib"
 AC_SUBST(RANLIB)
