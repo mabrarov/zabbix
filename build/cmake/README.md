@@ -4,7 +4,7 @@ This directory contains CMake project which is created based on official makefil
 
 ## Prerequisites
 
-Because of Windows Zabbix Agent is built using static C/C++ runtime (refer to `/MT` option in "[build/win32/project/Makefile_common.inc](build/win32/project/Makefile_common.inc#L15)") all libraries which are statically linked with Zabbix Agent (`zabbix_agentd.exe`) should be built with static C/C++ runtime too.
+Because of Windows Zabbix Agent is built using static C/C++ runtime (refer to `/MT` option in "[build/win32/project/Makefile_common.inc](../win32/project/Makefile_common.inc#L15)") all libraries which are statically linked with Zabbix Agent (`zabbix_agentd.exe`) should be built with static C/C++ runtime too.
 
 1. [CMake](https://cmake.org/)
 
@@ -25,7 +25,7 @@ Because of Windows Zabbix Agent is built using static C/C++ runtime (refer to `/
 
 1. [OpenSSL](https://www.openssl.org/) (optional, but is required if support of TLS is needed).
 
-    Though Zabbix makefiles additionally support (refer to "[build/win32/project/Makefile_tls.inc](build/win32/project/Makefile_tls.inc)") [mbed TLS](https://tls.mbed.org/) (PolarSSL) and [GnuTLS](https://www.gnutls.org/) this CMake project doesn't support them yet.
+    Though Zabbix makefiles additionally support (refer to "[build/win32/project/Makefile_tls.inc](../win32/project/Makefile_tls.inc)") [mbed TLS](https://tls.mbed.org/) (PolarSSL) and [GnuTLS](https://www.gnutls.org/) this CMake project doesn't support them yet.
 
     This CMake project was tested with [precompiled OpenSSL 1.1.0f for Visual C++ 2015](https://www.npcglib.org/~stathis/downloads/openssl-1.1.0f-vs2015.7z) taken from "[Precompiled OpenSSL - sigmoid](https://www.npcglib.org/~stathis/blog/precompiled-openssl/)".
 
