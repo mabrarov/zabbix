@@ -1,5 +1,13 @@
 # Zabbix CMake project 
 
+**Note** that on Windows CMake should be executed after Windows SDK environment was set up (even if `Visual Studio` generator is used). When using Visual Studio 2015 it's below command for x64 build environment:
+
+```cmd
+"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+```
+
+This command is executed when `VS2015 x64 Native Tools Command Prompt` shortcut (can be found in Windows menu after Visual Studio 2015 is installed) is used to open Windows command prompt with configured environment. 
+
 Example of command line for generation of Visual Studio 2015 project taking:
 
 1. PCRE (built with static C/C++ runtime using Visual C++ 2015) from `D:\Users\Marat\Documents\work\cpp\pcre-8.42_msvc2015` directory.
