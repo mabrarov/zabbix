@@ -6,7 +6,6 @@ cmake_minimum_required(VERSION 3.0)
 function(zbx_change_compile_options orignal_compile_options configuration_type result)
     set(compile_options ${orignal_compile_options})
     string(TOUPPER "${configuration_type}" configuration_type_upper_case)
-    # Turn on more strict warning mode
     if(MSVC)
         if(compile_options MATCHES "/W[0-4]")
             string(REGEX REPLACE "/W[0-4]" "/W3" compile_options "${compile_options}")
