@@ -24,17 +24,7 @@ list(APPEND cxx_compile_definitions
     WITH_COMMON_METRICS
     WITH_SPECIFIC_METRICS
     WITH_HOSTNAME_METRIC
-    WITH_SIMPLE_METRICS
-    _WINDOWS
-    _WIN32_WINNT=0x0501
-    _CONSOLE
-    UNICODE
-    _UNICODE
-    HAVE_WINLDAP_H
-    HAVE_ASSERT_H
-    ZABBIX_SERVICE
-    _VC80_UPGRADE=0x0600
-    HAVE_IPV6)
+    WITH_SIMPLE_METRICS)
 
 if(OPENSSL_FOUND)
     list(APPEND cxx_compile_definitions
@@ -202,7 +192,7 @@ target_link_libraries(${target_name}
 
 if(MSVC)
     foreach(link_option IN LISTS link_options)
-        # This the only way I found to pass linker options using Visual Studio CMake generator
+        # This is the only way I found to pass linker options using Visual Studio CMake generator
         set_property(TARGET ${target_name} APPEND_STRING PROPERTY LINK_FLAGS " ${link_option}")
     endforeach()
 endif()
