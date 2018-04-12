@@ -14,11 +14,11 @@ Because of Windows Zabbix Agent is built using static C/C++ runtime (refer to `/
 
     This CMake project was tested with [PCRE 8.42](https://ftp.pcre.org/pub/pcre/pcre-8.42.zip).
 
-    Use `PCRE_STATIC_RUNTIME` option of CMake project provided by PCRE to built static PCRE library with static C/C++ runtime.
-    Below commands can be used to build PCRE with Visual Studio 2015 (it is assumed that current directory is some temporary location used for generated Visual Studio project):
+    Use `PCRE_STATIC_RUNTIME` option of CMake project provided by PCRE to built static PCRE libraries with static C/C++ runtime.
+    Below commands can be used to build 64-bit PCRE with Visual Studio 2015 (it is assumed that current directory is some temporary location used for generated Visual Studio project):
 
     ```cmd
-    cmake.exe -D PCRE_STATIC_RUNTIME=ON -D CMAKE_INSTALL_PREFIX=<path-to-directory-for-the-built-PCRE> -G "Visual Studio 14 2015 Win64" <path-to-directory-with-unpacked-sources-of-PCRE>
+    cmake.exe -D PCRE_STATIC_RUNTIME=ON -D CMAKE_INSTALL_PREFIX=&lt;path-to-directory-for-the-built-PCRE&gt; -G "Visual Studio 14 2015 Win64" &lt;path-to-directory-with-unpacked-sources-of-PCRE&gt;
     cmake --build . --config Debug --target install
     cmake --build . --config Release --target install
     ```
@@ -27,14 +27,18 @@ Because of Windows Zabbix Agent is built using static C/C++ runtime (refer to `/
 
     Though Zabbix makefiles additionally support (refer to "[build/win32/project/Makefile_tls.inc](../win32/project/Makefile_tls.inc)") [mbed TLS](https://tls.mbed.org/) (PolarSSL) and [GnuTLS](https://www.gnutls.org/) this CMake project doesn't support them yet.
 
-    This CMake project was tested with [precompiled OpenSSL 1.1.0f for Visual C++ 2015](https://www.npcglib.org/~stathis/downloads/openssl-1.1.0f-vs2015.7z) taken from "[Precompiled OpenSSL - sigmoid](https://www.npcglib.org/~stathis/blog/precompiled-openssl/)".
+    This CMake project was tested with [precompiled OpenSSL 1.0.2l for Visual C++ 2015](https://www.npcglib.org/~stathis/downloads/openssl-1.0.2l-vs2015.7z) taken from "[Precompiled OpenSSL - sigmoid](https://www.npcglib.org/~stathis/blog/precompiled-openssl/)".
 
-    To make `FindOpenSSL` CMake module (used by this CMake project) able to find OpenSSL libraries some changes are required after precompiled OpenSSL is unpacked - move & rename files:
+    To make [`FindOpenSSL`](https://cmake.org/cmake/help/v3.0/module/FindOpenSSL.html) CMake module (used by this CMake project) able to find OpenSSL 64-bit libraries some changes are required after precompiled OpenSSL is unpacked:
 
-    * `lib64/libcryptoMT.lib` -> `lib/libcrypto64MT.lib`   
-    * `lib64/libcryptoMTd.lib` -> `lib/libcrypto64MTd.lib`
-    * `lib64/libsslMT.lib` -> `lib/libssl64MT.lib`
-    * `lib64/libsslMTd.lib` -> `lib/libssl64MTd.lib`
+    * Remove `lib` directory.   
+    * Remove `include` directory.
+    * Remove `bin` directory.
+    * Rename `lib64` directory to `lib`.
+    * Rename `include64` directory to `include`.
+    * Rename `bin64` directory to `bin`.
+    
+    i.e. remove all files related to x86 build and replace them with x64 build files.
 
 ## Building
 
