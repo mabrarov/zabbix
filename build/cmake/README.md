@@ -18,7 +18,7 @@ Because of Windows Zabbix Agent is built using static C/C++ runtime (refer to `/
     Below commands can be used to build 64-bit PCRE with Visual Studio 2015 (it is assumed that current directory is some temporary location used for generated Visual Studio project):
 
     ```cmd
-    cmake.exe -D PCRE_STATIC_RUNTIME=ON -D CMAKE_INSTALL_PREFIX=&lt;path-to-directory-for-the-built-PCRE&gt; -G "Visual Studio 14 2015 Win64" &lt;path-to-directory-with-unpacked-sources-of-PCRE&gt;
+    cmake.exe -D PCRE_STATIC_RUNTIME=ON -D CMAKE_INSTALL_PREFIX=<path-to-directory-for-the-built-PCRE> -G "Visual Studio 14 2015 Win64" <path-to-directory-with-unpacked-sources-of-PCRE>
     cmake --build . --config Debug --target install
     cmake --build . --config Release --target install
     ```
