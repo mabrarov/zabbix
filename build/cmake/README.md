@@ -71,12 +71,12 @@ Example of command line for generation of Visual Studio 2015 project with below 
 1. `D:\Users\Marat\Documents\work\cpp\zabbix\build\cmake` is the same directory where this `README.md` is located.
 1. `CMAKE_USER_MAKE_RULES_OVERRIDE` and `CMAKE_USER_MAKE_RULES_OVERRIDE_CXX` are required to use static C/C++ runtime.
 1. `D:\Users\Marat\Documents\work\cpp\pcre-8.42_msvc2015` is the directory where PCRE is installed.
-1. `D:\Users\Marat\Documents\work\cpp\openssl-1.1.0f-vs2015` is the directory where OpenSSL is installed (unpacked).
+1. `D:\Users\Marat\Documents\work\cpp\openssl-1.0.2l-x64-vs2015` is the directory where OpenSSL is installed (unpacked).
 
 Current directory is the directory where generated Visual Studio 2015 project will be placed. 
 
 ```cmd
-cmake.exe -D CMAKE_USER_MAKE_RULES_OVERRIDE=D:\Users\Marat\Documents\work\cpp\zabbix\build\cmake\cmake\static_c_runtime_overrides.cmake -D CMAKE_USER_MAKE_RULES_OVERRIDE_CXX=D:\Users\Marat\Documents\work\cpp\zabbix\build\cmake\cmake\static_cxx_runtime_overrides.cmake -D PCRE_ROOT=D:\Users\Marat\Documents\work\cpp\pcre-8.42_msvc2015 -D OPENSSL_ROOT_DIR=D:\Users\Marat\Documents\work\cpp\openssl-1.1.0f-vs2015 -G "Visual Studio 14 2015 Win64" D:\Users\Marat\Documents\work\cpp\zabbix\build\cmake
+cmake.exe -D CMAKE_USER_MAKE_RULES_OVERRIDE=D:\Users\Marat\Documents\work\cpp\zabbix\build\cmake\cmake\static_c_runtime_overrides.cmake -D CMAKE_USER_MAKE_RULES_OVERRIDE_CXX=D:\Users\Marat\Documents\work\cpp\zabbix\build\cmake\cmake\static_cxx_runtime_overrides.cmake -D PCRE_ROOT=D:\Users\Marat\Documents\work\cpp\pcre-8.42_msvc2015 -D OPENSSL_ROOT_DIR=D:\Users\Marat\Documents\work\cpp\openssl-1.0.2l-x64-vs2015 -G "Visual Studio 14 2015 Win64" D:\Users\Marat\Documents\work\cpp\zabbix\build\cmake
 ```
 
 ## Example for building of generated Visual Studio 2015 project
