@@ -18,7 +18,7 @@ Because of Windows Zabbix Agent is built using static C/C++ runtime (refer to `/
     Below commands can be used to build 64-bit PCRE with Visual Studio 2015 (it is assumed that current directory is some temporary location used for generated Visual Studio project):
 
     ```cmd
-    cmake.exe -D PCRE_STATIC_RUNTIME=ON -D CMAKE_INSTALL_PREFIX=<path-to-directory-for-the-built-PCRE> -G "Visual Studio 14 2015 Win64" <path-to-directory-with-unpacked-sources-of-PCRE>
+    cmake.exe -D PCRE_STATIC_RUNTIME=ON -D CMAKE_INSTALL_PREFIX=path-to-directory-for-the-built-PCRE -G "Visual Studio 14 2015 Win64" path-to-directory-with-unpacked-sources-of-PCRE
     cmake --build . --config Debug --target install
     cmake --build . --config Release --target install
     ```
@@ -52,13 +52,13 @@ The same command is executed by "VS2015 x64 Native Tools Command Prompt" shortcu
 
 ## Build options
 
-It's assumed that `<zabbix_root>` is the directory where this git repository is cloned into.
+It's assumed that `ZABBIX_ROOT` is the directory where this git repository is cloned into.
 
-1. `CMAKE_USER_MAKE_RULES_OVERRIDE` option should point to `<zabbix_root>/build/cmake/cmake/static_c_runtime_overrides.cmake`.
-1. `CMAKE_USER_MAKE_RULES_OVERRIDE_CXX` option should point to `<zabbix_root>/build/cmake/cmake/static_cxx_runtime_overrides.cmake`.
-1. `PCRE_ROOT` can be used as a hint for searching for PCRE. It should point to the directory where built PCRE is installed (refer to `<path-to-directory-for-the-built-PCRE>` in "[Prerequisites](#prerequisites)" section). 
+1. `CMAKE_USER_MAKE_RULES_OVERRIDE` option should point to `ZABBIX_ROOT/build/cmake/cmake/static_c_runtime_overrides.cmake`.
+1. `CMAKE_USER_MAKE_RULES_OVERRIDE_CXX` option should point to `ZABBIX_ROOT/build/cmake/cmake/static_cxx_runtime_overrides.cmake`.
+1. `PCRE_ROOT` can be used as a hint for searching for PCRE. It should point to the directory where built PCRE is installed (refer to `path-to-directory-for-the-built-PCRE` in "[Prerequisites](#prerequisites)" section). 
 
-    Refer to header of FindPCRE CMake module (located in `<zabbix_root>/build/cmake/cmake/FindPCRE.cmake`) for details.
+    Refer to header of FindPCRE CMake module (located in `ZABBIX_ROOT/build/cmake/cmake/FindPCRE.cmake`) for details.
 
 1. `OPENSSL_ROOT_DIR` can be used as a hint for searching for OpenSSL. It should point to the directory where built OpenSSL is located (is unpacked). 
 
