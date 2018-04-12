@@ -58,7 +58,7 @@ It's assumed that `ZABBIX_ROOT` is the directory where this git repository is cl
 1. `CMAKE_USER_MAKE_RULES_OVERRIDE_CXX` option should point to `ZABBIX_ROOT/build/cmake/cmake/static_cxx_runtime_overrides.cmake`.
 1. `PCRE_ROOT` can be used as a hint for searching for PCRE. It should point to the directory where built PCRE is installed (refer to `path-to-directory-for-the-built-PCRE` in "[Prerequisites](#prerequisites)" section). 
 
-    Refer to header of FindPCRE CMake module (located in `ZABBIX_ROOT/build/cmake/cmake/FindPCRE.cmake`) for details.
+    Refer to header of [FindPCRE](cmake/FindPCRE.cmake) CMake module (located in `ZABBIX_ROOT/build/cmake/cmake/FindPCRE.cmake`) for details.
 
 1. `OPENSSL_ROOT_DIR` can be used as a hint for searching for OpenSSL. It should point to the directory where built OpenSSL is located (is unpacked). 
 
