@@ -34,7 +34,8 @@ list(APPEND cxx_compile_definitions
     "HAVE_WINLDAP_H"
     "HAVE_ASSERT_H"
     "ZABBIX_SERVICE"
-    "_VC80_UPGRADE=0x0600")
+    "_VC80_UPGRADE=0x0600"
+    "HAVE_IPV6")
 
 if(OPENSSL_FOUND)
     list(APPEND cxx_compile_definitions
@@ -44,11 +45,11 @@ endif()
 if(MSVC)
     list(APPEND cxx_compile_options
         "/Zi"
-        "/FD"
+        "$<$<NOT:$<CONFIG:DEBUG>>:/Ob1>"
         "/GF"
+        "/FD"
         "/Gy"
-        "/W3"
-        "$<$<NOT:$<CONFIG:DEBUG>>:/Ob1>")
+        "/W3")
 endif()
 
 list(APPEND resource_compile_definitions
@@ -62,8 +63,8 @@ endif()
 if(MSVC)
     list(APPEND link_options
         "/DEBUG"
-        "/DELAYLOAD:wevtapi.dll"
         "/OPT:REF"
+        "/DELAYLOAD:wevtapi.dll"
         "/INCREMENTAL:NO"
         "/DYNAMICBASE:NO")
 endif()
