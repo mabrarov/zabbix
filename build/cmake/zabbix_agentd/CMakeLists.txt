@@ -11,6 +11,8 @@ set(message_compiler_output_dir "${CMAKE_CURRENT_BINARY_DIR}")
 
 set(cxx_compile_definitions )
 set(cxx_compile_options )
+set(resource_compile_definitions )
+set(resource_compile_options )
 set(cxx_sources )
 set(message_source )
 set(resource_headers )
@@ -19,28 +21,51 @@ set(link_options )
 set(libraries )
 
 list(APPEND cxx_compile_definitions
-    ZABBIX_AGENT
-    WITH_AGENT_METRICS
-    WITH_COMMON_METRICS
-    WITH_SPECIFIC_METRICS
-    WITH_HOSTNAME_METRIC
-    WITH_SIMPLE_METRICS)
+    "WITH_AGENT_METRICS"
+    "WITH_COMMON_METRICS"
+    "WITH_SPECIFIC_METRICS"
+    "WITH_HOSTNAME_METRIC"
+    "WITH_SIMPLE_METRICS"
+    "_WINDOWS"
+    "_WIN32_WINNT=0x0501"
+    "_CONSOLE"
+    "UNICODE"
+    "_UNICODE"
+    "HAVE_WINLDAP_H"
+    "HAVE_ASSERT_H"
+    "ZABBIX_SERVICE"
+    "_VC80_UPGRADE=0x0600")
 
 if(OPENSSL_FOUND)
     list(APPEND cxx_compile_definitions
-        HAVE_OPENSSL)
+        "HAVE_OPENSSL")
 endif()
 
 if(MSVC)
     list(APPEND cxx_compile_options
-        "/Zi")
+        "/Zi"
+        "/FD"
+        "/GF"
+        "/Gy"
+        "/W3"
+        "$<$<NOT:$<CONFIG:DEBUG>>:/Ob1>")
+endif()
+
+list(APPEND resource_compile_definitions
+    "ZABBIX_AGENT")
+
+if(MSVC)
+    list(APPEND resource_compile_options
+        "/l 0x419")
 endif()
 
 if(MSVC)
     list(APPEND link_options
         "/DEBUG"
         "/DELAYLOAD:wevtapi.dll"
-        "/OPT:REF")
+        "/OPT:REF"
+        "/INCREMENTAL:NO"
+        "/DYNAMICBASE:NO")
 endif()
 
 list(APPEND libraries
@@ -61,7 +86,8 @@ if(OPENSSL_FOUND)
         OpenSSL::SSL
         OpenSSL::Crypto)
     if(OPENSSL_USE_STATIC_LIBS)
-        list(APPEND libraries crypt32)
+        list(APPEND libraries
+            "crypt32")
     endif()
 endif()
 
@@ -160,6 +186,9 @@ set(resource_files
     ${resource_headers}
     ${resource_sources}
     "${message_source}")
+
+set_property(SOURCE ${resource_sources} APPEND PROPERTY COMPILE_DEFINITIONS ${resource_compile_definitions})
+set_property(SOURCE ${resource_sources} APPEND PROPERTY COMPILE_FLAGS ${resource_compile_options})
 
 add_executable(${target_name}
     ${cxx_sources}
