@@ -270,3 +270,5 @@ build_script:
 artifacts:
   - path: build\cmake\build\zabbix_agent\$(configuration)\*.exe
     name: zabbix_agent
+  - path: build\cmake\build\zabbix_get\$(configuration)\*.exe
+    name: zabbix_get
