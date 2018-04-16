@@ -19,7 +19,6 @@ set(message_compiler_output_dir "${CMAKE_CURRENT_BINARY_DIR}")
 
 set(cxx_compile_definitions )
 set(cxx_compile_options )
-set(resource_compile_definitions )
 set(resource_compile_options )
 set(cxx_sources )
 set(cxx_headers )
@@ -30,6 +29,7 @@ set(link_options )
 set(libraries )
 
 list(APPEND cxx_compile_definitions
+    "ZABBIX_SENDER"
     "ZBX_EXPORT"
     "_WINDOWS"
     "_WIN32_WINNT=0x0501"
@@ -55,9 +55,6 @@ if(MSVC)
         "/Gy"
         "/W3")
 endif()
-
-list(APPEND resource_compile_definitions
-    "ZABBIX_SENDER")
 
 if(MSVC)
     list(APPEND resource_compile_options
@@ -144,7 +141,6 @@ set(resource_files
     ${resource_sources}
     "${message_source}")
 
-set_property(SOURCE ${resource_sources} APPEND PROPERTY COMPILE_DEFINITIONS ${resource_compile_definitions})
 set_property(SOURCE ${resource_sources} APPEND PROPERTY COMPILE_FLAGS ${resource_compile_options})
 
 add_library(${target_name} SHARED

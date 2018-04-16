@@ -14,7 +14,6 @@ set(message_compiler_output_dir "${CMAKE_CURRENT_BINARY_DIR}")
 
 set(cxx_compile_definitions )
 set(cxx_compile_options )
-set(resource_compile_definitions )
 set(resource_compile_options )
 set(cxx_sources )
 set(message_source )
@@ -24,6 +23,7 @@ set(link_options )
 set(libraries )
 
 list(APPEND cxx_compile_definitions
+    "ZABBIX_AGENT"
     "WITH_AGENT_METRICS"
     "WITH_COMMON_METRICS"
     "WITH_SPECIFIC_METRICS"
@@ -54,9 +54,6 @@ if(MSVC)
         "/Gy"
         "/W3")
 endif()
-
-list(APPEND resource_compile_definitions
-    "ZABBIX_AGENT")
 
 if(MSVC)
     list(APPEND resource_compile_options
@@ -191,7 +188,6 @@ set(resource_files
     ${resource_sources}
     "${message_source}")
 
-set_property(SOURCE ${resource_sources} APPEND PROPERTY COMPILE_DEFINITIONS ${resource_compile_definitions})
 set_property(SOURCE ${resource_sources} APPEND PROPERTY COMPILE_FLAGS ${resource_compile_options})
 
 add_executable(${target_name}
