@@ -272,5 +272,7 @@ artifacts:
     name: zabbix_agent
   - path: build\cmake\build\zabbix_get\$(configuration)\*.exe
     name: zabbix_get
-  - path: build\cmake\build\zabbix_sender_dll\$(configuration)\*.(?:dll|lib)
+  - path: build\cmake\build\zabbix_sender_dll\$(configuration)\*.dll
     name: zabbix_sender_dll
+  - path: build\cmake\build\zabbix_sender_dll\$(configuration)\*.lib
+    name: zabbix_sender_dll_import_lib
