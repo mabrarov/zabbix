@@ -49,7 +49,6 @@ endif()
 
 if(MSVC)
     list(APPEND cxx_compile_options
-        "/Zi"
         "$<$<NOT:$<CONFIG:DEBUG>>:/Ob1>"
         "/GF"
         "/FD"
@@ -67,8 +66,6 @@ endif()
 
 if(MSVC)
     list(APPEND link_options
-        "/DEBUG"
-        "/OPT:REF"
         "/INCREMENTAL:NO"
         "/DYNAMICBASE:NO")
 endif()
