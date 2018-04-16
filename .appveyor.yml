@@ -18,9 +18,9 @@ environment:
       PCRE_VERSION: '8.42'
       OPENSSL_VERSION: '1.0.2l'
 
-cache:
-  - C:\projects\downloads -> .appveyor.yml
-  - C:\projects\dependencies -> .appveyor.yml
+#cache:
+#  - C:\projects\downloads -> .appveyor.yml
+#  - C:\projects\dependencies -> .appveyor.yml
 
 install:
   - ps: |
