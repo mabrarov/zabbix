@@ -163,16 +163,17 @@ install:
           foreach ($openssl_directory_to_change in $openssl_directories_to_change) {
             switch ($env:PLATFORM) {
               "Win32" {
-                $openssl_directory_to_remove = "${openssl_directory_to_change}64"
+                $openssl_directory_to_remove = "$openssl_install_folder\${openssl_directory_to_change}64"
                 Write-Host "Removing directory: $openssl_directory_to_remove"
                 Remove-Item -Path "$openssl_directory_to_remove" -Recurse -Force
               }
               "x64" {
-                $openssl_directory_to_rename = "${openssl_directory_to_change}64"
-                Write-Host "Removing directory: $openssl_directory_to_change"
-                Remove-Item -Path "$openssl_directory_to_change" -Recurse -Force
-                Write-Host "Renaming directory $openssl_directory_to_rename to $openssl_directory_to_change"
-                Rename-Item -Path "$openssl_directory_to_rename" -NewName "$openssl_directory_to_change" -Force
+                $openssl_directory_to_remove = "$openssl_install_folder\${openssl_directory_to_change}"
+                $openssl_directory_to_rename = "$openssl_install_folder\${openssl_directory_to_change}64"
+                Write-Host "Removing directory: $openssl_directory_to_remove"
+                Remove-Item -Path "$openssl_directory_to_remove" -Recurse -Force
+                Write-Host "Renaming directory $openssl_directory_to_rename to $openssl_directory_to_remove"
+                Rename-Item -Path "$openssl_directory_to_rename" -NewName "$openssl_directory_to_remove" -Force
               }
               default {
                 throw "Unsupported platform for pre-built OpenSSL: $env:PLATFORM"
