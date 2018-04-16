@@ -131,7 +131,7 @@ install:
             throw "Unsupported MSVS version for pre-built OpenSSL: $env:MSVC_VERSION"
           }
         }
-        $openssl_platform_install_folder = $env:DEPENDENCIES_FOLDER\$openssl_platform_suffix
+        $openssl_platform_install_folder = "$env:DEPENDENCIES_FOLDER\$openssl_platform_suffix"
         $openssl_install_folder = "$openssl_platform_install_folder\openssl$openssl_version_suffix$openssl_toolchain_suffix"
         if (!(Test-Path -Path "$openssl_install_folder")) {
           Write-Host "Built OpenSSL libraries are absent for the selected toolchain (msvc-$env:MSVC_VERSION) and OpenSSL version ($env:OPENSSL_VERSION)"
