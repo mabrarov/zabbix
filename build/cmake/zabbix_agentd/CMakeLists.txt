@@ -4,6 +4,7 @@ project(zabbix_agentd)
 find_package(PCRE REQUIRED COMPONENTS pcre pcreposix)
 find_package(OpenSSL)
 
+set(zbx_project_dir "${zbx_home_dir}/src/zabbix_agent")
 set(target_name "${PROJECT_NAME}")
 set(generate_messages_target_name "${target_name}_generate_messages")
 
