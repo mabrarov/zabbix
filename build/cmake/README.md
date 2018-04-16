@@ -1,5 +1,7 @@
 # Zabbix CMake project
 
+[![AppVeyor CI Build Status](https://ci.appveyor.com/api/projects/status/8w9fv93fysw5iw53?svg=true)](https://ci.appveyor.com/project/mabrarov/zabbix)
+
 This directory contains CMake project which is created based on official makefiles provided with Zabbix sources. The only intention of this CMake project is to make it easier to build Zabbix Agent for Windows from [source code of Zabbix](https://www.zabbix.com/download_sources).
 
 ## Prerequisites
