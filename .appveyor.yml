@@ -105,18 +105,6 @@ install:
         $env:PCRE_ROOT = "$pcre_install_folder"
       }
       if ($env:OPENSSL_VERSION) {
-          $openssl_platform_suffix = ""
-          switch ($env:PLATFORM) {
-            "Win32" {
-              $openssl_platform_suffix = "-x86"
-            }
-            "x64" {
-              $openssl_platform_suffix = "-x64"
-            }
-            default {
-              throw "Unsupported platform for pre-built OpenSSL: $env:PLATFORM"
-            }
-          }
           $openssl_version_suffix = "-$env:OPENSSL_VERSION"
           $openssl_toolchain_suffix = ""
           switch ($env:MSVC_VERSION) {
