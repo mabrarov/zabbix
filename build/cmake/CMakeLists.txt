@@ -20,4 +20,5 @@ find_package(ManifestTool REQUIRED)
 
 add_subdirectory(zabbix_agent)
 add_subdirectory(zabbix_get)
+add_subdirectory(zabbix_sender)
 add_subdirectory(zabbix_sender_dll)
