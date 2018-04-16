@@ -87,4 +87,4 @@ Example of command line for building release version of generated Visual Studio 
 cmake --build . --config Release
 ```
 
-`zabbix_agentd/Release/zabbix_agentd.exe` file is created if build is successful.
+`zabbix_agent/Release/zabbix_agentd.exe` file is created if build is successful.

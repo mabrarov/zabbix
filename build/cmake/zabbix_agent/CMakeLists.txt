@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.0)
-project(zabbix_agentd)
+project(zabbix_agent)
 
 find_package(PCRE REQUIRED COMPONENTS pcre pcreposix)
 find_package(OpenSSL)
 
-set(zbx_project_dir "${zbx_home_dir}/src/zabbix_agent")
 set(target_name "${PROJECT_NAME}")
 set(generate_messages_target_name "${target_name}_generate_messages")
+set(output_name "zabbix_agentd")
 
+set(zbx_project_dir "${zbx_home_dir}/src/${PROJECT_NAME}")
 set(message_compiler_output_dir "${CMAKE_CURRENT_BINARY_DIR}")
 
 set(cxx_compile_definitions )
@@ -233,6 +234,7 @@ add_dependencies(${target_name} ${generate_messages_target_name})
 # Do not put results of build to the same place as makefiles do
 # because "CMake style" prefers out-of-source tree builds.
 #zbx_set_target_output_dir(${target_name} "${zbx_output_dir}")
+set_target_properties(${target_name} PROPERTIES OUTPUT_NAME "${output_name}")
 
 if(NOT zbx_no_cmake_dir_source_group)
     # Group files according to file path

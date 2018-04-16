@@ -18,4 +18,4 @@ set(zbx_src_dir            "${zbx_home_dir}/src")
 find_package(MessageCompiler REQUIRED)
 find_package(ManifestTool REQUIRED)
 
-add_subdirectory(zabbix_agentd)
+add_subdirectory(zabbix_agent)
