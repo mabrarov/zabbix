@@ -109,80 +109,79 @@ install:
         $env:PCRE_ROOT = "$pcre_install_folder"
       }
       if ($env:OPENSSL_VERSION) {
-          $openssl_platform_suffix = ""
-          switch ($env:PLATFORM) {
-            "Win32" {
-              $openssl_platform_suffix = "x86"
-            }
-            "x64" {
-              $openssl_platform_suffix = "x64"
-            }
-            default {
-              throw "Unsupported platform for pre-built OpenSSL: $env:PLATFORM"
-            }
+        $openssl_platform_suffix = ""
+        switch ($env:PLATFORM) {
+          "Win32" {
+            $openssl_platform_suffix = "x86"
           }
-          $openssl_version_suffix = "-$env:OPENSSL_VERSION"
-          $openssl_toolchain_suffix = ""
-          switch ($env:MSVC_VERSION) {
-            "14.0" {
-              $openssl_toolchain_suffix = "-vs2015"
-            }
-            default {
-              throw "Unsupported MSVS version for pre-built OpenSSL: $env:MSVC_VERSION"
-            }
+          "x64" {
+            $openssl_platform_suffix = "x64"
           }
-          $openssl_platform_install_folder = $env:DEPENDENCIES_FOLDER\$openssl_platform_suffix
-          $openssl_install_folder = "$openssl_platform_install_folder\openssl$openssl_version_suffix$openssl_toolchain_suffix"
-          if (!(Test-Path -Path "$openssl_install_folder")) {
-            Write-Host "Built OpenSSL libraries are absent for the selected toolchain (msvc-$env:MSVC_VERSION) and OpenSSL version ($env:OPENSSL_VERSION)"
-            $openssl_archive_name = "openssl$openssl_version_suffix$openssl_toolchain_suffix.7z"
-            $openssl_archive_file = "$env:DOWNLOADS_FOLDER\$openssl_archive_name"
-            if (!(Test-Path -Path "$openssl_archive_file")) {
-              $openssl_download_url = "https://www.npcglib.org/~stathis/downloads/$openssl_archive_name"
-              if (!(Test-Path -Path "$env:DOWNLOADS_FOLDER")) {
-                New-Item "$env:DOWNLOADS_FOLDER" -type directory | out-null
-              }
-              Write-Host "Going to download pre-built OpenSSL libraries from: $openssl_download_url to: $openssl_archive_file"
-              curl.exe --connect-timeout 300 --max-time 1800 --show-error --silent --location --output "$openssl_archive_file" "$openssl_download_url"
-              if ($LastExitCode -ne 0) {
-                throw "Downloading of pre-built OpenSSL libraries failed with exit code $LastExitCode."
-              }
-              Write-Host "Downloaded pre-built OpenSSL libraries: $openssl_archive_file"
-            }
-            Write-Host "Extracting pre-built OpenSSL libraries from: $openssl_archive_file to: $openssl_platform_install_folder"
-            if (!(Test-Path -Path "$openssl_platform_install_folder")) {
-              New-Item "$openssl_platform_install_folder" -type directory | out-null
-            }
-            7z.exe x "$openssl_archive_file" -o"$openssl_platform_install_folder" -aoa -y | out-null
-            if ($LastExitCode -ne 0) {
-              throw "File extraction failed with exit code $LastExitCode."
-            }
-            Write-Host "Extracted: $openssl_install_folder"
-            Write-Host "Re-organizing OpenSSL directories..."
-            $openssl_directories_to_change = @("lib", "include", "bin")
-            foreach ($openssl_directory_to_change in $openssl_directories_to_change) {
-              switch ($env:PLATFORM) {
-                "Win32" {
-                  $openssl_directory_to_remove = "${openssl_directory_to_change}64"
-                  Write-Host "Removing directory: $openssl_directory_to_remove"
-                  Remove-Item -Path "$openssl_directory_to_remove" -Recurse -Force
-                }
-                "x64" {
-                  $openssl_directory_to_rename = "${openssl_directory_to_change}64"
-                  Write-Host "Removing directory: $openssl_directory_to_change"
-                  Remove-Item -Path "$openssl_directory_to_change" -Recurse -Force
-                  Write-Host "Renaming directory $openssl_directory_to_rename to $openssl_directory_to_change"
-                  Rename-Item -Path "$openssl_directory_to_rename" -NewName "$openssl_directory_to_change" -Force
-                }
-                default {
-                  throw "Unsupported platform for pre-built OpenSSL: $env:PLATFORM"
-                }
-              }
-            }
-            Write-Host "... successfully completed re-organization of OpenSSL directories."
+          default {
+            throw "Unsupported platform for pre-built OpenSSL: $env:PLATFORM"
           }
-          $env:OPENSSL_ROOT = "$openssl_install_folder"
         }
+        $openssl_version_suffix = "-$env:OPENSSL_VERSION"
+        $openssl_toolchain_suffix = ""
+        switch ($env:MSVC_VERSION) {
+          "14.0" {
+            $openssl_toolchain_suffix = "-vs2015"
+          }
+          default {
+            throw "Unsupported MSVS version for pre-built OpenSSL: $env:MSVC_VERSION"
+          }
+        }
+        $openssl_platform_install_folder = $env:DEPENDENCIES_FOLDER\$openssl_platform_suffix
+        $openssl_install_folder = "$openssl_platform_install_folder\openssl$openssl_version_suffix$openssl_toolchain_suffix"
+        if (!(Test-Path -Path "$openssl_install_folder")) {
+          Write-Host "Built OpenSSL libraries are absent for the selected toolchain (msvc-$env:MSVC_VERSION) and OpenSSL version ($env:OPENSSL_VERSION)"
+          $openssl_archive_name = "openssl$openssl_version_suffix$openssl_toolchain_suffix.7z"
+          $openssl_archive_file = "$env:DOWNLOADS_FOLDER\$openssl_archive_name"
+          if (!(Test-Path -Path "$openssl_archive_file")) {
+            $openssl_download_url = "https://www.npcglib.org/~stathis/downloads/$openssl_archive_name"
+            if (!(Test-Path -Path "$env:DOWNLOADS_FOLDER")) {
+              New-Item "$env:DOWNLOADS_FOLDER" -type directory | out-null
+            }
+            Write-Host "Going to download pre-built OpenSSL libraries from: $openssl_download_url to: $openssl_archive_file"
+            curl.exe --connect-timeout 300 --max-time 1800 --show-error --silent --location --output "$openssl_archive_file" "$openssl_download_url"
+            if ($LastExitCode -ne 0) {
+              throw "Downloading of pre-built OpenSSL libraries failed with exit code $LastExitCode."
+            }
+            Write-Host "Downloaded pre-built OpenSSL libraries: $openssl_archive_file"
+          }
+          Write-Host "Extracting pre-built OpenSSL libraries from: $openssl_archive_file to: $openssl_platform_install_folder"
+          if (!(Test-Path -Path "$openssl_platform_install_folder")) {
+            New-Item "$openssl_platform_install_folder" -type directory | out-null
+          }
+          7z.exe x "$openssl_archive_file" -o"$openssl_platform_install_folder" -aoa -y | out-null
+          if ($LastExitCode -ne 0) {
+            throw "File extraction failed with exit code $LastExitCode."
+          }
+          Write-Host "Extracted: $openssl_install_folder"
+          Write-Host "Re-organizing OpenSSL directories..."
+          $openssl_directories_to_change = @("lib", "include", "bin")
+          foreach ($openssl_directory_to_change in $openssl_directories_to_change) {
+            switch ($env:PLATFORM) {
+              "Win32" {
+                $openssl_directory_to_remove = "${openssl_directory_to_change}64"
+                Write-Host "Removing directory: $openssl_directory_to_remove"
+                Remove-Item -Path "$openssl_directory_to_remove" -Recurse -Force
+              }
+              "x64" {
+                $openssl_directory_to_rename = "${openssl_directory_to_change}64"
+                Write-Host "Removing directory: $openssl_directory_to_change"
+                Remove-Item -Path "$openssl_directory_to_change" -Recurse -Force
+                Write-Host "Renaming directory $openssl_directory_to_rename to $openssl_directory_to_change"
+                Rename-Item -Path "$openssl_directory_to_rename" -NewName "$openssl_directory_to_change" -Force
+              }
+              default {
+                throw "Unsupported platform for pre-built OpenSSL: $env:PLATFORM"
+              }
+            }
+          }
+          Write-Host "... successfully completed re-organization of OpenSSL directories."
+        }
+        $env:OPENSSL_ROOT = "$openssl_install_folder"
       }
       switch ($env:CONFIGURATION) {
         "Debug" {
