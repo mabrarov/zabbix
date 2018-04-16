@@ -19,3 +19,4 @@ find_package(MessageCompiler REQUIRED)
 find_package(ManifestTool REQUIRED)
 
 add_subdirectory(zabbix_agent)
+add_subdirectory(zabbix_get)

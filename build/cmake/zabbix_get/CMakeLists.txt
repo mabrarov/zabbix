@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
-project(zabbix_agent)
+project(zabbix_get)
 
 find_package(PCRE REQUIRED COMPONENTS pcre pcreposix)
 find_package(OpenSSL)
 
 set(target_name "${PROJECT_NAME}")
 set(generate_messages_target_name "${target_name}_generate_messages")
-set(output_name "zabbix_agentd")
+set(output_name "zabbix_get")
 
 set(zbx_libs_dir "${zbx_src_dir}/libs")
 set(zbx_project_dir "${zbx_src_dir}/${PROJECT_NAME}")
@@ -24,11 +24,6 @@ set(link_options )
 set(libraries )
 
 list(APPEND cxx_compile_definitions
-    "WITH_AGENT_METRICS"
-    "WITH_COMMON_METRICS"
-    "WITH_SPECIFIC_METRICS"
-    "WITH_HOSTNAME_METRIC"
-    "WITH_SIMPLE_METRICS"
     "_WINDOWS"
     "_WIN32_WINNT=0x0501"
     "_CONSOLE"
@@ -56,7 +51,7 @@ if(MSVC)
 endif()
 
 list(APPEND resource_compile_definitions
-    "ZABBIX_AGENT")
+    "ZABBIX_GET")
 
 if(MSVC)
     list(APPEND resource_compile_options
@@ -81,9 +76,7 @@ list(APPEND libraries
     "Wldap32"
     "advapi32"
     "uuid"
-    "Iphlpapi"
-    "delayimp"
-    "wevtapi")
+    "Iphlpapi")
 
 if(OPENSSL_FOUND)
     list(APPEND libraries
@@ -96,69 +89,21 @@ if(OPENSSL_FOUND)
 endif()
 
 list(APPEND cxx_sources
-    "${zbx_libs_dir}/zbxalgo/algodefs.c"
-    "${zbx_libs_dir}/zbxalgo/vector.c"
-    "${zbx_libs_dir}/zbxcommon/alias.c"
     "${zbx_libs_dir}/zbxcommon/comms.c"
     "${zbx_libs_dir}/zbxcommon/iprange.c"
     "${zbx_libs_dir}/zbxcommon/misc.c"
     "${zbx_libs_dir}/zbxcommon/str.c"
     "${zbx_libs_dir}/zbxcommon/xml.c"
     "${zbx_libs_dir}/zbxcommon/zbxgetopt.c"
-    "${zbx_libs_dir}/zbxcommon/file.c"
     "${zbx_libs_dir}/zbxcomms/comms.c"
-    "${zbx_libs_dir}/zbxcomms/telnet.c"
     "${zbx_libs_dir}/zbxconf/cfg.c"
     "${zbx_libs_dir}/zbxcrypto/base64.c"
-    "${zbx_libs_dir}/zbxcrypto/md5.c"
-    "${zbx_libs_dir}/zbxjson/json.c"
-    "${zbx_libs_dir}/zbxjson/json_parser.c"
     "${zbx_libs_dir}/zbxlog/log.c"
     "${zbx_libs_dir}/zbxsys/mutexs.c"
     "${zbx_libs_dir}/zbxsys/symbols.c"
     "${zbx_libs_dir}/zbxsys/threads.c"
-    "${zbx_libs_dir}/zbxexec/execute.c"
-    "${zbx_libs_dir}/zbxsysinfo/agent/agent.c"
-    "${zbx_libs_dir}/zbxsysinfo/common/common.c"
-    "${zbx_libs_dir}/zbxsysinfo/common/cpu.c"
-    "${zbx_libs_dir}/zbxsysinfo/common/dir.c"
-    "${zbx_libs_dir}/zbxsysinfo/common/file.c"
-    "${zbx_libs_dir}/zbxsysinfo/common/http.c"
-    "${zbx_libs_dir}/zbxsysinfo/common/net.c"
-    "${zbx_libs_dir}/zbxsysinfo/common/system.c"
-    "${zbx_libs_dir}/zbxsysinfo/simple/ntp.c"
-    "${zbx_libs_dir}/zbxsysinfo/simple/simple.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/cpu.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/diskio.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/diskspace.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/memory.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/net.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/pdhmon.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/proc.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/services.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/swap.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/uptime.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/win32.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/wmi.cpp"
-    "${zbx_libs_dir}/zbxsysinfo/sysinfo.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/software.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/system.c"
-    "${zbx_libs_dir}/zbxsysinfo/win32/hostname.c"
-    "${zbx_libs_dir}/zbxwin32/perfmon.c"
-    "${zbx_libs_dir}/zbxwin32/service.c"
-    "${zbx_libs_dir}/zbxself/selfmon.c"
-    "${zbx_project_dir}/active.c"
-    "${zbx_project_dir}/cpustat.c"
-    "${zbx_project_dir}/eventlog.c"
-    "${zbx_project_dir}/listener.c"
-    "${zbx_project_dir}/logfiles.c"
-    "${zbx_project_dir}/perfstat.c"
-    "${zbx_project_dir}/stats.c"
-    "${zbx_project_dir}/zabbix_agentd.c"
-    "${zbx_project_dir}/zbxconf.c"
-    "${zbx_libs_dir}/zbxregexp/zbxregexp.c"
-    "${zbx_libs_dir}/zbxwin32/fatal.c"
-    "${zbx_libs_dir}/zbxwin32/disk.c")
+    "${zbx_project_dir}/zabbix_get.c"
+    "${zbx_libs_dir}/zbxwin32/fatal.c")
 
 if(OPENSSL_FOUND)
     list(APPEND cxx_sources
@@ -181,7 +126,7 @@ add_custom_target(${generate_messages_target_name}
 
 list(APPEND resource_headers
     "${zbx_makefile_dir}/resource.h"
-    "${zbx_makefile_dir}/zabbix_agent_desc.h")
+    "${zbx_makefile_dir}/zabbix_get_desc.h")
 
 list(APPEND resource_sources
     "${zbx_makefile_dir}/resource.rc")
