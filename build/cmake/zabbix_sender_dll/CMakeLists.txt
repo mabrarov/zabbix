@@ -1,15 +1,20 @@
 cmake_minimum_required(VERSION 3.0)
-project(zabbix_get)
+project(zabbix_sender_dll)
 
 find_package(PCRE REQUIRED COMPONENTS pcre pcreposix)
-find_package(OpenSSL)
+# It looks like the source code of zabbix_sender shared library doesn't support
+# TLS on Windows because some external symbols - like configured_tls_connect_mode
+# and configured_tls_accept_modes defined in "src/libs/zbxcrypto/tls.c" - are
+# missing in "src/zabbix_sender/win32/zabbix_sender.c". So we have to build
+# without TLS support.
+#find_package(OpenSSL)
 
 set(target_name "${PROJECT_NAME}")
 set(generate_messages_target_name "${target_name}_generate_messages")
-set(output_name "zabbix_get")
+set(output_name "zabbix_sender")
 
 set(zbx_libs_dir "${zbx_src_dir}/libs")
-set(zbx_project_dir "${zbx_src_dir}/${PROJECT_NAME}")
+set(zbx_project_dir "${zbx_src_dir}/zabbix_sender")
 set(message_compiler_output_dir "${CMAKE_CURRENT_BINARY_DIR}")
 
 set(cxx_compile_definitions )
@@ -17,6 +22,7 @@ set(cxx_compile_options )
 set(resource_compile_definitions )
 set(resource_compile_options )
 set(cxx_sources )
+set(cxx_headers )
 set(message_source )
 set(resource_headers )
 set(resource_sources )
@@ -24,6 +30,7 @@ set(link_options )
 set(libraries )
 
 list(APPEND cxx_compile_definitions
+    "ZBX_EXPORT"
     "_WINDOWS"
     "_WIN32_WINNT=0x0501"
     "_CONSOLE"
@@ -51,7 +58,7 @@ if(MSVC)
 endif()
 
 list(APPEND resource_compile_definitions
-    "ZABBIX_GET")
+    "ZABBIX_SENDER")
 
 if(MSVC)
     list(APPEND resource_compile_options
@@ -97,12 +104,17 @@ list(APPEND cxx_sources
     "${zbx_libs_dir}/zbxcomms/comms.c"
     "${zbx_libs_dir}/zbxconf/cfg.c"
     "${zbx_libs_dir}/zbxcrypto/base64.c"
+    "${zbx_libs_dir}/zbxjson/json.c"
+    "${zbx_libs_dir}/zbxjson/json_parser.c"
     "${zbx_libs_dir}/zbxlog/log.c"
     "${zbx_libs_dir}/zbxsys/mutexs.c"
     "${zbx_libs_dir}/zbxsys/symbols.c"
     "${zbx_libs_dir}/zbxsys/threads.c"
-    "${zbx_project_dir}/zabbix_get.c"
-    "${zbx_libs_dir}/zbxwin32/fatal.c")
+    "${zbx_libs_dir}/zbxwin32/fatal.c"
+    "${zbx_project_dir}/win32/zabbix_sender.c")
+
+list(APPEND cxx_headers
+    "${zbx_project_dir}/win32/zabbix_sender.h")
 
 if(OPENSSL_FOUND)
     list(APPEND cxx_sources
@@ -125,7 +137,7 @@ add_custom_target(${generate_messages_target_name}
 
 list(APPEND resource_headers
     "${zbx_makefile_dir}/resource.h"
-    "${zbx_makefile_dir}/zabbix_get_desc.h")
+    "${zbx_makefile_dir}/zabbix_sender_desc.h")
 
 list(APPEND resource_sources
     "${zbx_makefile_dir}/resource.rc")
@@ -138,8 +150,9 @@ set(resource_files
 set_property(SOURCE ${resource_sources} APPEND PROPERTY COMPILE_DEFINITIONS ${resource_compile_definitions})
 set_property(SOURCE ${resource_sources} APPEND PROPERTY COMPILE_FLAGS ${resource_compile_options})
 
-add_executable(${target_name}
+add_library(${target_name} SHARED
     ${cxx_sources}
+    ${cxx_headers}
     ${resource_headers}
     ${resource_sources})
 target_compile_options(${target_name}
@@ -149,7 +162,7 @@ target_compile_definitions(${target_name}
     PRIVATE
     ${cxx_compile_definitions})
 target_include_directories(${target_name}
-    PUBLIC
+    PRIVATE
     ${zbx_project_dir}
     ${message_compiler_output_dir}
     ${zbx_makefile_dir}
@@ -183,6 +196,7 @@ set_target_properties(${target_name} PROPERTIES OUTPUT_NAME "${output_name}")
 
 if(NOT zbx_no_cmake_dir_source_group)
     # Group files according to file path
+    zbx_dir_source_group("Header Files" "${zbx_src_dir}" "${cxx_headers}")
     zbx_dir_source_group("Source Files" "${zbx_src_dir}" "${cxx_sources}")
     zbx_dir_source_group("Resource Files" "${zbx_home_dir}" "${resource_files}")
 endif()
