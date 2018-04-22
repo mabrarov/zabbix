@@ -16,7 +16,7 @@ Because of Windows Zabbix Agent is built using static C/C++ runtime (refer to `/
 
     This CMake project was tested with [PCRE 8.42](https://ftp.pcre.org/pub/pcre/pcre-8.42.zip).
 
-    Use `PCRE_STATIC_RUNTIME` option of CMake project provided by PCRE to built static PCRE libraries with static C/C++ runtime.
+    Use `PCRE_STATIC_RUNTIME` option of CMake project provided by PCRE to build static PCRE libraries with static C/C++ runtime.
     Below commands can be used to build 64-bit PCRE with Visual Studio 2015 (it is assumed that current directory is some temporary location used for generated Visual Studio project):
 
     ```cmd
