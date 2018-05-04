@@ -47,6 +47,11 @@ if(MSVC)
         "/FD"
         "/Gy"
         "/W3")
+    if((MSVC_VERSION EQUAL 1900) OR (MSVC_VERSION GREATER 1900))
+        # Turn off option which is not turned on by default in command line
+        list(APPEND cxx_compile_options
+            "/Zc:inline-")
+    endif()
 endif()
 
 if(MSVC)
